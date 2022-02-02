@@ -35,11 +35,14 @@ function createCards(numCards) {
 
   while (index < numCards) {
     nameCard = allCards[indexCards].split(".")[0];
-    html = `<div class="card">
-      <img class="front" src="assets/front.png" alt="Frente" />
-      <img class="back" src="assets/${allCards[indexCards]}" alt="${nameCard}" />
-    </div>
-    `;
+    html = `<div class="card" onclick="flipCard(this)">
+      <div class="front-face face">
+        <img src="assets/front.png" alt="Frente" />
+      </div>
+      <div class="back-face face">
+        <img src="assets/${allCards[indexCards]}" alt="${nameCard}" />
+      </div>
+    </div>`;
 
     htmlCards.push(html);
     htmlCards.push(html);
@@ -49,7 +52,6 @@ function createCards(numCards) {
   }
 
   htmlCards = shuffleCards(htmlCards);
-  console.log(htmlCards);
   insertCardsInsideTheHTML(htmlCards);
 }
 
@@ -71,7 +73,10 @@ function insertCardsInsideTheHTML(cards) {
   }
 }
 
-// Adicionar evento de click nas cartas
-// Colocar as cartas no HTML
+function flipCard(card) {
+  card.classList.toggle("turn");
+}
+
+function compareTheCards() {}
 
 window.onload = init();
