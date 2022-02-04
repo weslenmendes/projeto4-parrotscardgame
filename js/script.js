@@ -1,4 +1,8 @@
 let numberOfCards = null;
+let upturnedCards = 0;
+let card1 = null,
+  card2 = null;
+let points = 0;
 
 // Função Inicial
 function init() {
@@ -67,16 +71,85 @@ function shuffleCards(cards) {
 // Inserir as cartas no HTML
 function insertCardsInsideTheHTML(cards) {
   const divCards = document.querySelector(".cards");
+  let allHTML = cards[0];
 
-  for (let index = 0; index < cards.length; index++) {
-    divCards.innerHTML += cards[index];
+  for (let index = 1; index < cards.length; index++) {
+    allHTML += cards[index];
   }
+
+  divCards.innerHTML = allHTML;
 }
 
 function flipCard(card) {
-  card.classList.toggle("turn");
+  if (upturnedCards < 2 && !card.classList.contains("turn")) {
+    card.classList.add("turn");
+  }
+
+  if (upturnedCards === 0) {
+    card1 = card;
+    upturnedCards++;
+  } else if (upturnedCards === 1) {
+    card2 = card;
+    upturnedCards++;
+  }
+
+  compareTheCards(card1, card2);
+
+  if (card1 && card2) {
+    const imgCard1 = card1.querySelector(".back-face img");
+    const imgCard2 = card2.querySelector(".back-face img");
+    let idTimeout;
+
+    const isEqual = imgCard1.alt === imgCard2.alt;
+
+    if (isEqual) {
+      markPoint();
+    } else {
+      idTimeout = setTimeout(() => untapCards(idTimeout), 1000);
+    }
+  }
 }
 
-function compareTheCards() {}
+function clearVariables() {
+  card1 = null;
+  card2 = null;
+  upturnedCards = 0;
+}
 
-window.onload = init();
+function untapCards(idTimeout) {
+  let idToTimeout;
+
+  card1.classList.remove("turn");
+  card2.classList.remove("turn");
+
+  clearInterval(idTimeout);
+  idToTimeout = setTimeout(clearVariables, 300);
+
+  return () => clearTimeout(idToTimeout);
+}
+
+function markPoint() {
+  points += 1;
+
+  gameOver();
+  clearVariables();
+}
+
+function compareTheCards(cardOne, cardTwo) {
+  if (cardOne === cardTwo) {
+    card2 = null;
+    upturnedCards = 1;
+  }
+}
+
+function gameOver() {
+  let idTimeout;
+
+  if (numberOfCards / 2 === points) {
+    idTimeout = setTimeout(() => alert("Terminou"), 500);
+  }
+
+  return () => clearInterval(idTimeout);
+}
+
+window.onload = init;
