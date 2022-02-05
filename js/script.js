@@ -4,6 +4,8 @@ let card1 = null,
   card2 = null;
 let points = 0;
 let numberOfMoves = 0;
+let timer = 0;
+let idInterval = null;
 
 // Função Inicial
 function init() {
@@ -72,6 +74,7 @@ function shuffleCards(cards) {
 // Inserir as cartas no HTML
 function insertCardsInsideTheHTML(cards) {
   const divCards = document.querySelector(".cards");
+
   let allHTML = cards[0];
 
   for (let index = 1; index < cards.length; index++) {
@@ -79,6 +82,8 @@ function insertCardsInsideTheHTML(cards) {
   }
 
   divCards.innerHTML = allHTML;
+
+  addTimer();
 }
 
 function flipCard(card) {
@@ -150,15 +155,41 @@ function gameOver() {
   let idTimeout;
 
   if (numberOfCards / 2 === points) {
-    idTimeout = setTimeout(
-      () => alert(`Você ganhou em ${numberOfMoves} jogadas!`),
-      500
-    );
+    removeTimer(idInterval);
+
+    idTimeout = setTimeout(() => {
+      alert(`Você ganhou em ${numberOfMoves} jogadas!`);
+    }, 500);
   }
 
   return () => clearInterval(idTimeout);
 }
 
-function someMensages() {}
+function addTimer() {
+  const timerHTML = document.querySelector(".timer");
+  timerHTML.classList.add("show");
+
+  idInterval = setInterval(() => {
+    timer++;
+    updateTimer(timer);
+  }, 1000);
+}
+
+function removeTimer(id) {
+  clearInterval(id);
+
+  timer = 0;
+}
+
+function updateTimer(value) {
+  const timerHTML = document.querySelector(".timer.show");
+
+  let minutes = Math.floor(value / 60);
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  let seconds = Math.floor(value % 60);
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  timerHTML.innerHTML = `${minutes}:${seconds}`;
+}
 
 window.onload = init;

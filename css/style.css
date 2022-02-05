@@ -8,6 +8,8 @@ body {
   min-width: 320px;
   width: 100%;
   height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 main {
@@ -84,6 +86,43 @@ header h1 {
   transform: rotateY(-180deg);
 }
 
+.timer {
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.timer.show {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: lightgray;
+  padding: 11px;
+  border-radius: 5px;
+  border: 4px solid red;
+  color: black;
+  font-weight: 700;
+  font-size: 18px;
+
+  transform: translateX(0px);
+  opacity: 1;
+}
+
+@media screen and (max-width: 1020px) {
+  .timer.show {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .cards {
+    margin-top: 43px;
+  }
+
+  .timer.show {
+    top: 100px;
+  }
+}
+
 @media screen and (max-width: 600px) {
   header h1 {
     font-size: 36px;
@@ -93,7 +132,7 @@ header h1 {
 
 @media screen and (max-width: 425px) {
   header {
-    padding-bottom: 35px;
+    padding-bottom: 80px;
   }
 
   .cards {
@@ -101,6 +140,7 @@ header h1 {
     align-items: center;
     margin-right: 0;
     margin-left: 0;
+    margin-top: 0;
   }
 
   .cards .card {
