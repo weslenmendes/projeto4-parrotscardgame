@@ -6,6 +6,7 @@ let points = 0;
 let numberOfMoves = 0;
 let timer = 0;
 let idInterval = null;
+let idTimeout = null;
 
 // Função Inicial
 function init() {
@@ -87,15 +88,18 @@ function insertCardsInsideTheHTML(cards) {
 }
 
 function flipCard(card) {
-  if (upturnedCards < 2 && !card.classList.contains("turn")) {
+  const dontHaveThisClass = !card.classList.contains("this");
+  const conditions = !card.classList.contains("turn") && dontHaveThisClass;
+
+  if (upturnedCards < 2 && conditions) {
     card.classList.add("turn");
   }
 
-  if (upturnedCards === 0) {
+  if (upturnedCards === 0 && dontHaveThisClass) {
     card1 = card;
     upturnedCards++;
     numberOfMoves++;
-  } else if (upturnedCards === 1) {
+  } else if (upturnedCards === 1 && dontHaveThisClass) {
     card2 = card;
     upturnedCards++;
     numberOfMoves++;
@@ -127,20 +131,15 @@ function clearVariables() {
 function untapCards(idTimeout) {
   let idToTimeout;
 
-  card1.classList.remove("turn");
-  card2.classList.remove("turn");
+  if (card1 && card2) {
+    card1.classList.remove("turn");
+    card2.classList.remove("turn");
+  }
 
   clearInterval(idTimeout);
   idToTimeout = setTimeout(clearVariables, 300);
 
   return () => clearTimeout(idToTimeout);
-}
-
-function markPoint() {
-  points += 1;
-
-  gameOver();
-  clearVariables();
 }
 
 function compareTheCards(cardOne, cardTwo) {
@@ -151,6 +150,16 @@ function compareTheCards(cardOne, cardTwo) {
   }
 }
 
+function markPoint() {
+  points += 1;
+
+  card1.classList.add("this");
+  card2.classList.add("this");
+
+  gameOver();
+  clearVariables();
+}
+
 function gameOver() {
   let idTimeout;
 
@@ -159,15 +168,40 @@ function gameOver() {
 
     idTimeout = setTimeout(() => {
       alert(`Você ganhou em ${numberOfMoves} jogadas!`);
+      restart();
     }, 500);
   }
 
   return () => clearInterval(idTimeout);
 }
 
+function clearScoreAndClock() {
+  const clock = document.querySelector(".timer");
+  clock.innerHTML = "00:00";
+  
+  points = 0;
+  numberOfMoves = 0;
+}
+
+function restart() {
+  let ask = null;
+
+  while (ask !== "s" && ask !== "n") {
+    ask = prompt("Você quer jogar novamente? s/n");
+  }
+
+  if (ask === 's'){
+    clearVariables();
+    clearScoreAndClock();
+    init();
+  } 
+}
+
+// Funções referentes ao Timer
 function addTimer() {
   const timerHTML = document.querySelector(".timer");
   timerHTML.classList.add("show");
+
 
   idInterval = setInterval(() => {
     timer++;
