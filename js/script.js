@@ -6,7 +6,6 @@ let points = 0;
 let numberOfMoves = 0;
 let timer = 0;
 let idInterval = null;
-let idTimeout = null;
 
 // Função Inicial
 function init() {
@@ -136,9 +135,10 @@ function untapCards(idTimeout) {
     card2.classList.remove("turn");
   }
 
-  clearInterval(idTimeout);
-  idToTimeout = setTimeout(clearVariables, 300);
+  clearTimeout(idTimeout);
 
+  idToTimeout = setTimeout(clearVariables, 300);
+  
   return () => clearTimeout(idToTimeout);
 }
 
@@ -161,18 +161,18 @@ function markPoint() {
 }
 
 function gameOver() {
-  let idTimeout;
+  let idToTimeout;
 
   if (numberOfCards / 2 === points) {
     removeTimer(idInterval);
 
-    idTimeout = setTimeout(() => {
+    idToTimeout = setTimeout(() => {
       alert(`Você ganhou em ${numberOfMoves} jogadas!`);
       restart();
     }, 500);
   }
 
-  return () => clearInterval(idTimeout);
+  return () => clearTimeout(idToTimeout);
 }
 
 function clearScoreAndClock() {
