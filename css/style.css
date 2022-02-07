@@ -12,10 +12,6 @@ body {
   overflow-y: auto;
 }
 
-main {
-  padding-bottom: 40px;
-}
-
 header {
   display: flex;
   justify-content: center;
@@ -87,12 +83,13 @@ header h1 {
 }
 
 .timer {
+  display: inline-block;
   transition: all 0.3s ease-in-out;
   opacity: 0;
 }
 
 .timer.show {
-  position: absolute;
+  position: fixed;
   top: 50px;
   right: 20px;
   background-color: lightgray;
@@ -103,27 +100,15 @@ header h1 {
   font-weight: 700;
   font-size: 18px;
 
-  transform: translateX(0px);
   opacity: 1;
 }
 
-@media screen and (max-width: 1020px) {
-  .timer.show {
-    font-size: 14px;
-  }
-}
-
 @media screen and (max-width: 760px) {
-  .cards {
-    margin-top: 43px;
-  }
-
   .timer.show {
-    top: 100px;
+    bottom: 20px;
+    top: initial;
   }
-}
 
-@media screen and (max-width: 600px) {
   header h1 {
     font-size: 36px;
     line-height: 42.19px;
@@ -132,7 +117,9 @@ header h1 {
 
 @media screen and (max-width: 425px) {
   header {
-    padding-bottom: 80px;
+    width: 80%;
+    padding-bottom: 34px;
+    margin: 0 auto;
   }
 
   .cards {
@@ -150,5 +137,9 @@ header h1 {
 
   .container {
     margin-top: 0;
+  }
+
+  .timer.show {
+    font-size: 14px;
   }
 }
