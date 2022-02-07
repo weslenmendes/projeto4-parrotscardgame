@@ -5,17 +5,18 @@ let card1 = null,
 let points = 0;
 let numberOfMoves = 0;
 let timer = 0;
+let timeInSeconds = null;
 let idInterval = null;
 
 // Função Inicial
 function init() {
   numberOfCards = parseInt(
-    prompt("Digite a quantidade de cartas: Ex.: 2, 4, 6, ..., 14")
+    prompt("Digite a quantidade de cartas: Ex.: 4, 6, 8, ..., 14")
   );
 
-  while (numberOfCards < 2 || numberOfCards > 14 || numberOfCards % 2 !== 0) {
+  while (numberOfCards < 4 || numberOfCards > 14 || numberOfCards % 2 !== 0) {
     numberOfCards = parseInt(
-      prompt("Digite a quantidade de cartas: Ex.: 2, 4, 6, ..., 14")
+      prompt("Digite a quantidade de cartas: Ex.: 4, 6, 8, ..., 14")
     );
   }
 
@@ -42,14 +43,14 @@ function createCards(numCards) {
 
   while (index < numCards) {
     nameCard = allCards[indexCards].split(".")[0];
-    html = `<div class="card" onclick="flipCard(this)" data-identifier="card">
+    html = `<article class="card" onclick="flipCard(this)" data-identifier="card">
       <div class="front-face face" data-identifier="front-face">
         <img src="assets/front.png" alt="Frente" />
       </div>
       <div class="back-face face" data-identifier="back-face">
         <img src="assets/${allCards[indexCards]}" alt="${nameCard}" />
       </div>
-    </div>`;
+    </article>`;
 
     htmlCards.push(html);
     htmlCards.push(html);
@@ -87,24 +88,19 @@ function insertCardsInsideTheHTML(cards) {
 }
 
 function flipCard(card) {
-  const dontHaveThisClass = !card.classList.contains("this");
-  const conditions = !card.classList.contains("turn") && dontHaveThisClass;
-
-  if (upturnedCards < 2 && conditions) {
+  if (upturnedCards < 2) {
     card.classList.add("turn");
   }
 
-  if (upturnedCards === 0 && dontHaveThisClass) {
+  if (upturnedCards === 0) {
     card1 = card;
     upturnedCards++;
     numberOfMoves++;
-  } else if (upturnedCards === 1 && dontHaveThisClass) {
+  } else if (upturnedCards === 1 && card !== card1) {
     card2 = card;
     upturnedCards++;
     numberOfMoves++;
   }
-
-  compareTheCards(card1, card2);
 
   if (card1 && card2) {
     const imgCard1 = card1.querySelector(".back-face img");
@@ -142,19 +138,11 @@ function untapCards(idTimeout) {
   return () => clearTimeout(idToTimeout);
 }
 
-function compareTheCards(cardOne, cardTwo) {
-  if (cardOne === cardTwo) {
-    card2 = null;
-    upturnedCards = 1;
-    numberOfMoves--;
-  }
-}
-
 function markPoint() {
   points += 1;
 
-  card1.classList.add("this");
-  card2.classList.add("this");
+  card1.removeAttribute("onclick");
+  card2.removeAttribute("onclick");
 
   gameOver();
   clearVariables();
@@ -167,7 +155,7 @@ function gameOver() {
     removeTimer(idInterval);
 
     idToTimeout = setTimeout(() => {
-      alert(`Você ganhou em ${numberOfMoves} jogadas!`);
+      alert(`Você ganhou em ${numberOfMoves} jogadas e em ${timeInSeconds} segundos!`);
       restart();
     }, 500);
   }
@@ -202,9 +190,9 @@ function addTimer() {
   const timerHTML = document.querySelector(".timer");
   timerHTML.classList.add("show");
 
-
   idInterval = setInterval(() => {
     timer++;
+    timeInSeconds = timer;
     updateTimer(timer);
   }, 1000);
 }
